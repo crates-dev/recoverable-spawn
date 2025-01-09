@@ -25,7 +25,6 @@ cargo add recoverable-spawn
 
 ```rust
 use recoverable_spawn::*;
-use crate::*;
 let handle: JoinHandle<()> = recoverable_spawn(|| {
     panic!("test");
 });
