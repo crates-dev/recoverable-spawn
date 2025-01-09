@@ -1,4 +1,4 @@
 pub(crate) mod thread;
 
 pub use std::thread::JoinHandle;
-pub use thread::run::*;
+pub use thread::spawn::*;
