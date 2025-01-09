@@ -21,6 +21,7 @@ use std::thread::{spawn, JoinHandle};
 /// # Panics
 /// - This function itself will not panic, but the function `f` could panic during execution.
 ///   The panic will be caught, preventing the program from crashing.
+#[inline]
 pub fn recoverable_spawn<F>(f: F) -> JoinHandle<()>
 where
     F: Fn() + Send + Sync + 'static,
