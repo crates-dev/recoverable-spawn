@@ -1,0 +1,16 @@
+[package]
+name = "recoverable-spawn"
+version = "0.0.1"
+edition = "2021"
+authors = ["ltpp-universe <root@ltpp.vip>"] 
+license = "MIT"
+description = """A library to automatically restart a thread after a panic. This is useful for ensuring that threads continue running even in the event of an unexpected error. It provides a simple and effective mechanism to catch panics, restart the thread, and optionally log the error for monitoring and debugging purposes."""
+keywords = ["time", "hyperlane", "day", "format", "lang"]
+repository = "https://github.com/ltpp-universe/recoverable-spawn.git"
+categories = ["network-programming", "web-programming"]
+exclude = [
+    "target",
+    "Cargo.lock",
+    "sh",
+    ".github"
+]
