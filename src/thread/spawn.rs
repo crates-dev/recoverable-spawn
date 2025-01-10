@@ -45,8 +45,8 @@ pub fn spawn_error_to_string(err: BoxAnySend) -> String {
 /// will terminate without crashing the entire program.
 ///
 /// # Parameters
-/// - `function`: A function of type `function` to be executed in the spawned thread. It must implement `Fn()`, `Send`, `Sync`, and `'static` traits.
-///     - `Fn()`: The function is callable with no arguments and no return value.
+/// - `function`: A function of type `function` to be executed in the spawned thread. It must implement `FnOnce()`, `Send`, `Sync`, and `'static` traits.
+///     - `FnOnce()`: The function is callable with no arguments and no return value.
 ///     - `Send`: The function can be safely transferred across thread boundaries.
 ///     - `Sync`: The function can be shared across threads safely.
 ///     - `'static`: The function does not contain references to non-static data (i.e., data that lives beyond the function's scope).

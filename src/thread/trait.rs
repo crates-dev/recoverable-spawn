@@ -1,9 +1,9 @@
 /// Trait alias for functions that can be executed in a recoverable context.
 ///
-/// - Functions implementing this trait must satisfy `Fn() + Send + Sync + 'static`.
-pub trait RecoverableFunction: Fn() + Send + Sync + 'static {}
+/// - Functions implementing this trait must satisfy `FnOnce() + Send + Sync + 'static`.
+pub trait RecoverableFunction: FnOnce() + Send + Sync + 'static {}
 
-impl<T> RecoverableFunction for T where T: Fn() + Send + Sync + 'static {}
+impl<T> RecoverableFunction for T where T: FnOnce() + Send + Sync + 'static {}
 
 /// Trait alias for error-handling functions used in a recoverable context.
 ///
