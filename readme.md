@@ -9,7 +9,7 @@
 
 [Api Docs](https://docs.rs/recoverable-spawn/latest/recoverable_spawn/)
 
-> A library to automatically restart a thread after a panic. This is useful for ensuring that threads continue running even in the event of an unexpected error. It provides a simple and effective mechanism to catch panics, restart the thread, and optionally log the error for monitoring and debugging purposes.
+> A thread that supports automatic recovery from panics, allowing threads to restart after a panic. Useful for resilient and fault-tolerant concurrency in network and web programming.
 
 ## Installation
 
@@ -29,6 +29,15 @@ let msg: &str = "test";
 let handle: JoinHandle<()> = recoverable_spawn(move || {
     panic!("{}", msg);
 });
+let _ = handle.join();
+let handle: JoinHandle<()> = recoverable_spawn_with_error_handle(
+    move || {
+        panic!("{}", msg);
+    },
+    |err| {
+        println!("handle error => {}", err);
+    },
+);
 let _ = handle.join();
 ```
 
