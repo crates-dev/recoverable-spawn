@@ -30,7 +30,7 @@ fn run_error_handle_function<E: ErrorHandlerFunction>(func: E, error: &str) -> S
 /// - `err`: The captured error value, of type `BoxAnySend`.
 /// - Returns: A string representation of the error value.
 #[inline]
-fn error_to_string(err: BoxAnySend) -> String {
+pub fn spawn_error_to_string(err: BoxAnySend) -> String {
     match err.downcast_ref::<&str>() {
         Some(str_slice) => str_slice.to_string(),
         None => match err.downcast_ref::<String>() {
@@ -85,7 +85,7 @@ where
     spawn(|| {
         let run_result: SpawnResult = run_function(function);
         if let Err(err) = run_result {
-            let err_string: String = error_to_string(err);
+            let err_string: String = spawn_error_to_string(err);
             let _: SpawnResult = run_error_handle_function(error_handle_function, &err_string);
         }
     })
