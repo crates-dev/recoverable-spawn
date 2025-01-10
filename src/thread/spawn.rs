@@ -7,7 +7,7 @@ use std::thread::{spawn, JoinHandle};
 /// - `func`: A function implementing the `RecoverableFunction` trait.
 /// - Returns: A `SpawnResult` indicating the success or failure of the function execution.
 #[inline]
-fn run_function<F: RecoverableFunction>(func: F) -> SpawnResult {
+pub fn run_function<F: RecoverableFunction>(func: F) -> SpawnResult {
     panic::catch_unwind(AssertUnwindSafe(|| {
         func();
     }))
@@ -19,7 +19,7 @@ fn run_function<F: RecoverableFunction>(func: F) -> SpawnResult {
 /// - `error`: A string slice representing the error message.
 /// - Returns: A `SpawnResult` indicating the success or failure of the error-handling function execution.
 #[inline]
-fn run_error_handle_function<E: ErrorHandlerFunction>(func: E, error: &str) -> SpawnResult {
+pub fn run_error_handle_function<E: ErrorHandlerFunction>(func: E, error: &str) -> SpawnResult {
     panic::catch_unwind(AssertUnwindSafe(|| {
         func(error);
     }))
