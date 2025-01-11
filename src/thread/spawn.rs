@@ -74,10 +74,7 @@ where
 /// - `error_handle_function`: A function to handle errors, implementing the `ErrorHandlerFunction` trait.
 /// - Returns: A `JoinHandle<()>` that can be used to manage the spawned thread.
 #[inline]
-pub fn recoverable_spawn_with_error_handle<F, E>(
-    function: F,
-    error_handle_function: E,
-) -> JoinHandle<()>
+pub fn recoverable_spawn_catch<F, E>(function: F, error_handle_function: E) -> JoinHandle<()>
 where
     F: RecoverableFunction,
     E: ErrorHandlerFunction,
@@ -88,5 +85,26 @@ where
             let err_string: String = spawn_error_to_string(err);
             let _: SpawnResult = run_error_handle_function(error_handle_function, &err_string);
         }
+    })
+}
+
+#[inline]
+pub fn recoverable_spawn_catch_finally<F, E, L>(
+    function: F,
+    error_handle_function: E,
+    finally: L,
+) -> JoinHandle<()>
+where
+    F: RecoverableFunction,
+    E: ErrorHandlerFunction,
+    L: RecoverableFunction,
+{
+    spawn(|| {
+        let run_result: SpawnResult = run_function(function);
+        if let Err(err) = run_result {
+            let err_string: String = spawn_error_to_string(err);
+            let _: SpawnResult = run_error_handle_function(error_handle_function, &err_string);
+        }
+        let _: SpawnResult = run_function(finally);
     })
 }
