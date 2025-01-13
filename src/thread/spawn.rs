@@ -10,7 +10,7 @@ use tokio::*;
 /// - `func`: A function implementing the `AsyncRecoverableFunction` trait.
 /// - Returns: A `AsyncSpawnResult` indicating the success or failure of the function execution.
 #[inline]
-pub fn async_run_function<F: AsyncRecoverableFunction>(mut func: F) -> AsyncSpawnResult {
+pub fn async_run_function<F: AsyncRecoverableFunction>(func: F) -> AsyncSpawnResult {
     if let Ok(rt) = Runtime::new() {
         let _ = rt.block_on(async move {
             let func = async move {
@@ -29,13 +29,13 @@ pub fn async_run_function<F: AsyncRecoverableFunction>(mut func: F) -> AsyncSpaw
 /// - Returns: A `AsyncSpawnResult` indicating the success or failure of the error-handling function execution.
 #[inline]
 pub fn async_run_error_handle_function<E: AsyncErrorHandlerFunction>(
-    mut func: E,
-    error: String,
+    func: E,
+    error: Arc<String>,
 ) -> AsyncSpawnResult {
     if let Ok(rt) = Runtime::new() {
         let _ = rt.block_on(async move {
             let func = async move {
-                func.call(Arc::new(error)).await;
+                func.call(error.clone()).await;
             };
             return tokio::spawn(func).await;
         });
@@ -96,7 +96,7 @@ where
         if let Err(err) = run_result {
             let err_string: String = tokio_error_to_string(err);
             let _: AsyncSpawnResult =
-                async_run_error_handle_function(error_handle_function, err_string);
+                async_run_error_handle_function(error_handle_function, Arc::new(err_string));
         }
     })
 }
@@ -159,7 +159,7 @@ where
         if let Err(err) = run_result {
             let err_string: String = tokio_error_to_string(err);
             let _: AsyncSpawnResult =
-                async_run_error_handle_function(error_handle_function, err_string);
+                async_run_error_handle_function(error_handle_function, Arc::new(err_string));
         }
         let _: AsyncSpawnResult = async_run_function(finally);
     })
@@ -170,7 +170,7 @@ where
 /// - `func`: A function implementing the `RecoverableFunction` trait.
 /// - Returns: A `SpawnResult` indicating the success or failure of the function execution.
 #[inline]
-pub fn run_function<F: RecoverableFunction>(mut func: F) -> SpawnResult {
+pub fn run_function<F: RecoverableFunction>(func: F) -> SpawnResult {
     std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
         func();
     }))
