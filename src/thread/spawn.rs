@@ -10,7 +10,7 @@ use tokio::*;
 /// - `func`: A function implementing the `AsyncRecoverableFunction` trait.
 /// - Returns: A `AsyncSpawnResult` indicating the success or failure of the function execution.
 #[inline]
-pub fn async_run_function<F: AsyncRecoverableFunction>(func: F) -> AsyncSpawnResult {
+pub fn async_run_function<F: AsyncRecoverableFunction>(mut func: F) -> AsyncSpawnResult {
     if let Ok(rt) = Runtime::new() {
         let _ = rt.block_on(async move {
             let func = async move {
@@ -29,7 +29,7 @@ pub fn async_run_function<F: AsyncRecoverableFunction>(func: F) -> AsyncSpawnRes
 /// - Returns: A `AsyncSpawnResult` indicating the success or failure of the error-handling function execution.
 #[inline]
 pub fn async_run_error_handle_function<E: AsyncErrorHandlerFunction>(
-    func: E,
+    mut func: E,
     error: String,
 ) -> AsyncSpawnResult {
     if let Ok(rt) = Runtime::new() {
@@ -170,7 +170,7 @@ where
 /// - `func`: A function implementing the `RecoverableFunction` trait.
 /// - Returns: A `SpawnResult` indicating the success or failure of the function execution.
 #[inline]
-pub fn run_function<F: RecoverableFunction>(func: F) -> SpawnResult {
+pub fn run_function<F: RecoverableFunction>(mut func: F) -> SpawnResult {
     std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
         func();
     }))
