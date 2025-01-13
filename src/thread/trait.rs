@@ -65,3 +65,10 @@ impl<T> RecoverableFunction for T where T: FnMut() + Send + Sync + 'static {}
 pub trait ErrorHandlerFunction: Fn(&str) + Send + Sync + 'static {}
 
 impl<T> ErrorHandlerFunction for T where T: Fn(&str) + Send + Sync + 'static {}
+
+/// Trait alias for functions that can be executed in a recoverable context.
+///
+/// - Functions implementing this trait must satisfy `FnOnce() + Send + Sync + 'static`.
+pub trait RecoverableOnceFunction: FnOnce() + Send + Sync + 'static {}
+
+impl<T> RecoverableOnceFunction for T where T: FnOnce() + Send + Sync + 'static {}
