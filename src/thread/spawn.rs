@@ -1,6 +1,10 @@
 use super::{r#trait::*, r#type::*};
+use runtime::Runtime;
 use std::panic::{self, AssertUnwindSafe};
+use std::sync::Arc;
 use std::thread::{spawn, JoinHandle};
+use tokio::task;
+use tokio::*;
 
 /// Executes a recoverable function within a panic-safe context.
 ///
@@ -9,7 +13,14 @@ use std::thread::{spawn, JoinHandle};
 #[inline]
 pub fn run_function<F: RecoverableFunction>(func: F) -> SpawnResult {
     panic::catch_unwind(AssertUnwindSafe(|| {
-        func();
+        if let Ok(rt) = Runtime::new() {
+            rt.block_on(async move {
+                task::unconstrained(async move {
+                    func.call().await;
+                })
+                .await;
+            });
+        }
     }))
 }
 
@@ -19,9 +30,16 @@ pub fn run_function<F: RecoverableFunction>(func: F) -> SpawnResult {
 /// - `error`: A string slice representing the error message.
 /// - Returns: A `SpawnResult` indicating the success or failure of the error-handling function execution.
 #[inline]
-pub fn run_error_handle_function<E: ErrorHandlerFunction>(func: E, error: &str) -> SpawnResult {
+pub fn run_error_handle_function<E: ErrorHandlerFunction>(func: E, error: String) -> SpawnResult {
     panic::catch_unwind(AssertUnwindSafe(|| {
-        func(error);
+        if let Ok(rt) = Runtime::new() {
+            rt.block_on(async move {
+                let func = async move {
+                    func.call(Arc::new(error)).await;
+                };
+                tokio::spawn(func).await.unwrap();
+            });
+        }
     }))
 }
 
@@ -83,7 +101,7 @@ where
         let run_result: SpawnResult = run_function(function);
         if let Err(err) = run_result {
             let err_string: String = spawn_error_to_string(err);
-            let _: SpawnResult = run_error_handle_function(error_handle_function, &err_string);
+            let _: SpawnResult = run_error_handle_function(error_handle_function, err_string);
         }
     })
 }
@@ -103,7 +121,7 @@ where
         let run_result: SpawnResult = run_function(function);
         if let Err(err) = run_result {
             let err_string: String = spawn_error_to_string(err);
-            let _: SpawnResult = run_error_handle_function(error_handle_function, &err_string);
+            let _: SpawnResult = run_error_handle_function(error_handle_function, err_string);
         }
         let _: SpawnResult = run_function(finally);
     })

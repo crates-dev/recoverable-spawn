@@ -2,7 +2,7 @@
 fn test_recoverable_spawn() {
     use crate::*;
     let msg: &str = "test";
-    let handle: JoinHandle<()> = recoverable_spawn(move || {
+    let handle: JoinHandle<()> = recoverable_spawn(move || async move {
         panic!("{}", msg);
     });
     let _ = handle.join();
@@ -13,10 +13,10 @@ fn test_recoverable_spawn_catch() {
     use crate::*;
     let msg: &str = "test";
     let handle: JoinHandle<()> = recoverable_spawn_catch(
-        move || {
+        move || async move {
             panic!("{}", msg);
         },
-        |err| {
+        move |err| async move {
             println!("handle error => {}", err);
         },
     );
@@ -28,14 +28,14 @@ fn test_recoverable_spawn_catch_finally() {
     use crate::*;
     let msg: &str = "test";
     let handle: JoinHandle<()> = recoverable_spawn_catch_finally(
-        move || {
+        move || async move {
             panic!("{}", msg);
         },
-        |err| {
+        move |err| async move {
             println!("handle error => {}", err);
             panic!("{}", err);
         },
-        || {
+        move || async move {
             println!("finally");
         },
     );

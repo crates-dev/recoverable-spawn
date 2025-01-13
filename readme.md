@@ -26,7 +26,7 @@ cargo add recoverable-spawn
 ```rust
 use recoverable_spawn::*;
 let msg: &str = "test";
-let handle: JoinHandle<()> = recoverable_spawn(move || {
+let handle: JoinHandle<()> = recoverable_spawn(move || async move {
     panic!("{}", msg);
 });
 let _ = handle.join();
@@ -38,10 +38,10 @@ let _ = handle.join();
 use recoverable_spawn::*;
 let msg: &str = "test";
 let handle: JoinHandle<()> = recoverable_spawn_catch(
-    move || {
+    move || async move {
         panic!("{}", msg);
     },
-    |err| {
+    move |err| async move {
         println!("handle error => {}", err);
     },
 );
@@ -54,14 +54,14 @@ let _ = handle.join();
 use recoverable_spawn::*;
 let msg: &str = "test";
 let handle: JoinHandle<()> = recoverable_spawn_catch_finally(
-    move || {
+    move || async move {
         panic!("{}", msg);
     },
-    |err| {
+    move |err| async move {
         println!("handle error => {}", err);
         panic!("{}", err);
     },
-    || {
+    move || async move {
         println!("finally");
     },
 );

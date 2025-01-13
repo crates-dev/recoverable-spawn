@@ -17,10 +17,10 @@ pub type SpawnResult = Result<(), BoxAnySend>;
 ///
 /// - This type represents an `Arc`-wrapped version of any function implementing the `RecoverableFunction` trait.
 /// - Enables shared ownership and thread-safe usage of recoverable functions in concurrent environments.
-pub type ArcRecoverableFunction = Arc<dyn RecoverableFunction>;
+pub type ArcRecoverableFunction<O, F> = Arc<dyn RecoverableFunction<Output = O, Future = F>>;
 
 /// Alias for an `Arc`-wrapped error handler function.
 ///
 /// - This type represents an `Arc`-wrapped version of any function implementing the `ErrorHandlerFunction` trait.
 /// - Allows shared ownership and thread-safe handling of errors with custom logic across multiple threads.
-pub type ArcErrorHandlerFunction = Arc<dyn ErrorHandlerFunction>;
+pub type ArcErrorHandlerFunction<O> = Arc<dyn ErrorHandlerFunction<Future = O>>;
