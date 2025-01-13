@@ -26,18 +26,54 @@ cargo add recoverable-spawn
 ```rust
 use recoverable_spawn::*;
 let msg: &str = "test";
-let handle: JoinHandle<()> = recoverable_spawn(move || async move {
+let handle: JoinHandle<()> = recoverable_spawn(move || {
+    panic!("{}", msg);
+});
+let _ = handle.join();
+let handle: JoinHandle<()> = recoverable_spawn_with_error_handle(
+    move || {
+        panic!("{}", msg);
+    },
+    |err| {
+        println!("handle error => {}", err);
+    },
+);
+let _ = handle.join();
+```
+
+### recoverable_spawn_with_error_handle
+
+```rust
+use recoverable_spawn::*;
+let msg: &str = "test";
+let handle: JoinHandle<()> = recoverable_spawn_with_error_handle(
+    move || {
+        panic!("{}", msg);
+    },
+    |err| {
+        println!("handle error => {}", err);
+    },
+);
+let _ = handle.join();
+```
+
+### async_recoverable_spawn
+
+```rust
+use recoverable_spawn::*;
+let msg: &str = "test";
+let handle: JoinHandle<()> = async_recoverable_spawn(move || async move {
     panic!("{}", msg);
 });
 let _ = handle.join();
 ```
 
-### recoverable_spawn_catch
+### async_recoverable_spawn_catch
 
 ```rust
 use recoverable_spawn::*;
 let msg: &str = "test";
-let handle: JoinHandle<()> = recoverable_spawn_catch(
+let handle: JoinHandle<()> = async_recoverable_spawn_catch(
     move || async move {
         panic!("{}", msg);
     },
@@ -48,12 +84,12 @@ let handle: JoinHandle<()> = recoverable_spawn_catch(
 let _ = handle.join();
 ```
 
-### recoverable_spawn_catch_finally
+### test_async_recoverable_spawn_catch_finally
 
 ```rust
 use recoverable_spawn::*;
 let msg: &str = "test";
-let handle: JoinHandle<()> = recoverable_spawn_catch_finally(
+let handle: JoinHandle<()> = test_async_recoverable_spawn_catch_finally(
     move || async move {
         panic!("{}", msg);
     },

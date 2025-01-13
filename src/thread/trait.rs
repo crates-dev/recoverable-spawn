@@ -4,7 +4,7 @@ use std::{future::Future, sync::Arc};
 ///
 /// - Functions implementing this trait must return a `Future` and satisfy
 ///   `FnOnce() -> Future + Send + Sync + 'static`.
-pub trait RecoverableFunction: Send + Sync + 'static {
+pub trait AsyncRecoverableFunction: Send + Sync + 'static {
     type Output: Send;
     type Future: Future<Output = Self::Output> + Send;
 
@@ -12,7 +12,7 @@ pub trait RecoverableFunction: Send + Sync + 'static {
     fn call(self) -> Self::Future;
 }
 
-impl<F, Fut, O> RecoverableFunction for F
+impl<F, Fut, O> AsyncRecoverableFunction for F
 where
     F: FnOnce() -> Fut + Send + Sync + 'static,
     Fut: Future<Output = O> + Send + 'static,
@@ -30,7 +30,7 @@ where
 ///
 /// - Functions implementing this trait must accept a `Arc<String>` as an error message,
 ///   return a `Future`, and satisfy `Fn(Arc<String>) -> Future + Send + Sync + 'static`.
-pub trait ErrorHandlerFunction: Send + Sync + 'static {
+pub trait AsyncErrorHandlerFunction: Send + Sync + 'static {
     type Future: Future<Output = ()> + Send;
 
     /// Handles an error asynchronously.
@@ -39,7 +39,7 @@ pub trait ErrorHandlerFunction: Send + Sync + 'static {
     fn call(&self, error: Arc<String>) -> Self::Future;
 }
 
-impl<F, Fut> ErrorHandlerFunction for F
+impl<F, Fut> AsyncErrorHandlerFunction for F
 where
     F: Fn(Arc<String>) -> Fut + Send + Sync + 'static,
     Fut: Future<Output = ()> + Send + 'static,
@@ -50,3 +50,18 @@ where
         self(error)
     }
 }
+
+/// Trait alias for functions that can be executed in a recoverable context.
+///
+/// - Functions implementing this trait must satisfy `FnOnce() + Send + Sync + 'static`.
+pub trait RecoverableFunction: FnOnce() + Send + Sync + 'static {}
+
+impl<T> RecoverableFunction for T where T: FnOnce() + Send + Sync + 'static {}
+
+/// Trait alias for error-handling functions used in a recoverable context.
+///
+/// - Functions implementing this trait must accept a `&str` as an error message
+///   and satisfy `Fn(&str) + Send + Sync + 'static`.
+pub trait ErrorHandlerFunction: Fn(&str) + Send + Sync + 'static {}
+
+impl<T> ErrorHandlerFunction for T where T: Fn(&str) + Send + Sync + 'static {}
