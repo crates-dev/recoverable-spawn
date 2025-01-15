@@ -1,9 +1,17 @@
 use super::{r#trait::*, r#type::*};
+use once_cell::sync::Lazy;
 use runtime::Runtime;
 use std::sync::Arc;
 use std::thread::{spawn, JoinHandle};
 use task::JoinError;
 use tokio::*;
+
+static GLOBAL_RUNTIME: Lazy<Runtime> = Lazy::new(|| loop {
+    match Runtime::new() {
+        Ok(runtime) => return runtime,
+        Err(_) => {}
+    }
+});
 
 /// Executes a recoverable function within a panic-safe context.
 ///
@@ -11,15 +19,13 @@ use tokio::*;
 /// - Returns: A `AsyncSpawnResult` indicating the success or failure of the function execution.
 #[inline]
 pub fn async_run_function<F: AsyncRecoverableFunction>(func: F) -> AsyncSpawnResult {
-    if let Ok(rt) = Runtime::new() {
-        let _ = rt.block_on(async move {
-            let func = async move {
-                func.call().await;
-            };
-            return tokio::spawn(func).await;
-        });
-    }
-    return Ok(());
+    let res: Result<(), JoinError> = GLOBAL_RUNTIME.block_on(async move {
+        let func = async move {
+            func.call().await;
+        };
+        return tokio::spawn(func).await;
+    });
+    return res;
 }
 
 /// Executes an error-handling function with a given error message within a panic-safe context.
@@ -32,15 +38,13 @@ pub fn async_run_error_handle_function<E: AsyncErrorHandlerFunction>(
     func: E,
     error: Arc<String>,
 ) -> AsyncSpawnResult {
-    if let Ok(rt) = Runtime::new() {
-        let _ = rt.block_on(async move {
-            let func = async move {
-                func.call(error.clone()).await;
-            };
-            return tokio::spawn(func).await;
-        });
-    }
-    return Ok(());
+    let res: Result<(), JoinError> = GLOBAL_RUNTIME.block_on(async move {
+        let func = async move {
+            func.call(error.clone()).await;
+        };
+        return tokio::spawn(func).await;
+    });
+    return res;
 }
 
 /// Converts a panic-captured error value into a string.
