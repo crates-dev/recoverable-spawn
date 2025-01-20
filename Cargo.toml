@@ -1,6 +1,6 @@
 [package]
 name = "recoverable-spawn"
-version = "3.3.3"
+version = "3.3.4"
 edition = "2021"
 authors = ["ltpp-universe <root@ltpp.vip>"] 
 license = "MIT"
@@ -23,7 +23,7 @@ tokio = { version = "1.43.0", features = ["full"] }
 incremental = false
 opt-level = 3
 lto = true
-panic = "abort"
+panic = "unwind"
 debug = false
 codegen-units = 1
 strip = "debuginfo"
@@ -33,7 +33,7 @@ backtrace = "off"
 incremental = false
 opt-level = 3
 lto = true
-panic = "abort"
+panic = "unwind"
 debug = false
 codegen-units = 1
 strip = "debuginfo"
