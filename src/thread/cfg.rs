@@ -1,8 +1,8 @@
 #[test]
 fn test_async_recoverable_spawn() {
-    use crate::*;
+    use crate::{r#async::*, JoinHandle};
     let msg: &str = "test";
-    let handle: JoinHandle<()> = async_recoverable_spawn(move || async move {
+    let handle: JoinHandle<()> = recoverable_spawn(move || async move {
         panic!("{}", msg);
     });
     let _ = handle.join();
@@ -10,9 +10,9 @@ fn test_async_recoverable_spawn() {
 
 #[test]
 fn test_async_recoverable_spawn_catch() {
-    use crate::*;
+    use crate::{r#async::*, JoinHandle};
     let msg: &str = "test";
-    let handle: JoinHandle<()> = async_recoverable_spawn_catch(
+    let handle: JoinHandle<()> = recoverable_spawn_catch(
         move || async move {
             panic!("{}", msg);
         },
@@ -25,9 +25,9 @@ fn test_async_recoverable_spawn_catch() {
 
 #[test]
 fn test_async_recoverable_spawn_catch_finally() {
-    use crate::*;
+    use crate::{r#async::*, JoinHandle};
     let msg: &str = "test";
-    let handle: JoinHandle<()> = async_recoverable_spawn_catch_finally(
+    let handle: JoinHandle<()> = recoverable_spawn_catch_finally(
         move || async move {
             panic!("{}", msg);
         },
@@ -42,9 +42,53 @@ fn test_async_recoverable_spawn_catch_finally() {
     let _ = handle.join();
 }
 
+#[tokio::test]
+async fn test_async_async_recoverable_spawn() {
+    use crate::r#async::*;
+    let msg: &str = "test";
+    async_recoverable_spawn(move || async move {
+        panic!("{}", msg);
+    })
+    .await;
+}
+
+#[tokio::test]
+async fn test_async_async_recoverable_spawn_catch() {
+    use crate::r#async::*;
+    let msg: &str = "test";
+    async_recoverable_spawn_catch(
+        move || async move {
+            panic!("{}", msg);
+        },
+        move |err| async move {
+            println!("async handle error => {}", err);
+        },
+    )
+    .await;
+}
+
+#[tokio::test]
+async fn test_async_async_recoverable_spawn_catch_finally() {
+    use crate::r#async::*;
+    let msg: &str = "test";
+    async_recoverable_spawn_catch_finally(
+        move || async move {
+            panic!("{}", msg);
+        },
+        move |err| async move {
+            println!("async handle error => {}", err);
+            panic!("{}", err);
+        },
+        move || async move {
+            println!("finally");
+        },
+    )
+    .await;
+}
+
 #[test]
 fn test_recoverable_spawn() {
-    use crate::*;
+    use crate::{r#sync::*, JoinHandle};
     let msg: &str = "test";
     let handle: JoinHandle<()> = recoverable_spawn(move || {
         panic!("{}", msg);
@@ -54,7 +98,7 @@ fn test_recoverable_spawn() {
 
 #[test]
 fn test_recoverable_spawn_catch() {
-    use crate::*;
+    use crate::{r#sync::*, JoinHandle};
     let msg: &str = "test";
     let handle: JoinHandle<()> = recoverable_spawn_catch(
         move || {
@@ -69,7 +113,7 @@ fn test_recoverable_spawn_catch() {
 
 #[test]
 fn test_recoverable_spawn_catch_finally() {
-    use crate::*;
+    use crate::{r#sync::*, JoinHandle};
     let msg: &str = "test";
     let handle: JoinHandle<()> = recoverable_spawn_catch_finally(
         move || {
