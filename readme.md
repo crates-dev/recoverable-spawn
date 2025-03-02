@@ -3,6 +3,7 @@
 ## recoverable-spawn
 
 [![](https://img.shields.io/crates/v/recoverable-spawn.svg)](https://crates.io/crates/recoverable-spawn)
+[![](https://img.shields.io/crates/d/recoverable-spawn.svg)](https://img.shields.io/crates/d/recoverable-spawn.svg)
 [![](https://docs.rs/recoverable-spawn/badge.svg)](https://docs.rs/recoverable-spawn)
 [![](https://github.com/ltpp-universe/recoverable-spawn/workflows/Rust/badge.svg)](https://github.com/ltpp-universe/recoverable-spawn/actions?query=workflow:Rust)
 [![](https://img.shields.io/crates/l/recoverable-spawn.svg)](./LICENSE)
