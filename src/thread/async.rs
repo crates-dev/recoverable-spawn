@@ -2,14 +2,16 @@ use super::{r#trait::*, r#type::*};
 use once_cell::sync::Lazy;
 use runtime::Runtime;
 use std::sync::Arc;
-use std::thread::{spawn, JoinHandle};
+use std::thread::{JoinHandle, spawn};
 use task::JoinError;
 use tokio::*;
 
-static GLOBAL_RUNTIME: Lazy<Runtime> = Lazy::new(|| loop {
-    match Runtime::new() {
-        Ok(runtime) => return runtime,
-        Err(_) => {}
+static GLOBAL_RUNTIME: Lazy<Runtime> = Lazy::new(|| {
+    loop {
+        match Runtime::new() {
+            Ok(runtime) => return runtime,
+            Err(_) => {}
+        }
     }
 });
 

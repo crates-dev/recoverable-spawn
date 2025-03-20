@@ -1,5 +1,5 @@
 use super::{r#trait::*, r#type::*};
-use std::thread::{spawn, JoinHandle};
+use std::thread::{JoinHandle, spawn};
 
 /// Executes a recoverable function within a panic-safe context.
 ///
