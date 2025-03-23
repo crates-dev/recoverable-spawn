@@ -19,7 +19,6 @@ static GLOBAL_RUNTIME: Lazy<Runtime> = Lazy::new(|| {
 ///
 /// - `func`: A function implementing the `AsyncRecoverableFunction` trait.
 /// - Returns: A `AsyncSpawnResult` indicating the success or failure of the function execution.
-#[inline]
 pub fn run_function<F: AsyncRecoverableFunction>(func: F) -> AsyncSpawnResult {
     let res: Result<(), JoinError> = GLOBAL_RUNTIME.block_on(async move {
         let func = async move {
@@ -35,7 +34,6 @@ pub fn run_function<F: AsyncRecoverableFunction>(func: F) -> AsyncSpawnResult {
 /// - `func`: A function implementing the `AsyncErrorHandlerFunction` trait.
 /// - `error`: A string slice representing the error message.
 /// - Returns: A `AsyncSpawnResult` indicating the success or failure of the error-handling function execution.
-#[inline]
 pub fn run_error_handle_function<E: AsyncErrorHandlerFunction>(
     func: E,
     error: Arc<String>,
@@ -53,7 +51,6 @@ pub fn run_error_handle_function<E: AsyncErrorHandlerFunction>(
 ///
 /// - `func`: A function implementing the `AsyncRecoverableFunction` trait.
 /// - Returns: A `AsyncSpawnResult` indicating the success or failure of the function execution.
-#[inline]
 pub async fn async_run_function<F: AsyncRecoverableFunction>(func: F) -> AsyncSpawnResult {
     let func = async move {
         func.call().await;
@@ -66,7 +63,6 @@ pub async fn async_run_function<F: AsyncRecoverableFunction>(func: F) -> AsyncSp
 /// - `func`: A function implementing the `AsyncErrorHandlerFunction` trait.
 /// - `error`: A string slice representing the error message.
 /// - Returns: A `AsyncSpawnResult` indicating the success or failure of the error-handling function execution.
-#[inline]
 pub async fn async_run_error_handle_function<E: AsyncErrorHandlerFunction>(
     func: E,
     error: Arc<String>,
@@ -81,7 +77,6 @@ pub async fn async_run_error_handle_function<E: AsyncErrorHandlerFunction>(
 ///
 /// - `err`: The captured error value, of type `JoinError `.
 /// - Returns: A string representation of the error value.
-#[inline]
 pub fn tokio_error_to_string(err: JoinError) -> String {
     err.to_string()
 }
@@ -104,7 +99,6 @@ pub fn tokio_error_to_string(err: JoinError) -> String {
 /// # Panics
 /// - This function itself will not panic, but the function `function` could panic during execution.
 ///   The panic will be caught, preventing the program from crashing.
-#[inline]
 pub fn recoverable_spawn<F>(function: F) -> JoinHandle<()>
 where
     F: AsyncRecoverableFunction,
@@ -132,7 +126,6 @@ where
 /// # Panics
 /// - This function itself will not panic, but the function `function` could panic during execution.
 ///   The panic will be caught, preventing the program from crashing.
-#[inline]
 pub async fn async_recoverable_spawn<F>(function: F)
 where
     F: AsyncRecoverableFunction,
@@ -145,7 +138,6 @@ where
 /// - `function`: The primary function to execute, implementing the `AsyncRecoverableFunction` trait.
 /// - `error_handle_function`: A function to handle errors, implementing the `AsyncErrorHandlerFunction` trait.
 /// - Returns: A `JoinHandle<()>` that can be used to manage the spawned thread.
-#[inline]
 pub fn recoverable_spawn_catch<F, E>(function: F, error_handle_function: E) -> JoinHandle<()>
 where
     F: AsyncRecoverableFunction,
@@ -165,7 +157,6 @@ where
 ///
 /// - `function`: The primary function to execute, implementing the `AsyncRecoverableFunction` trait.
 /// - `error_handle_function`: A function to handle errors, implementing the `AsyncErrorHandlerFunction` trait.
-#[inline]
 pub async fn async_recoverable_spawn_catch<F, E>(function: F, error_handle_function: E)
 where
     F: AsyncRecoverableFunction,
@@ -221,7 +212,6 @@ where
 /// - If the `function` fails, the `error_handle_function` is invoked. If this fails as well, it will not stop the execution
 ///   of the `finally` block.
 /// - The final block (`finally`) is always executed, even if the main function (`function`) or the error handler (`error_handle_function`) fails.
-#[inline]
 pub fn recoverable_spawn_catch_finally<F, E, L>(
     function: F,
     error_handle_function: E,
@@ -285,7 +275,6 @@ where
 /// - If the `function` fails, the `error_handle_function` is invoked. If this fails as well, it will not stop the execution
 ///   of the `finally` block.
 /// - The final block (`finally`) is always executed, even if the main function (`function`) or the error handler (`error_handle_function`) fails.
-#[inline]
 pub async fn async_recoverable_spawn_catch_finally<F, E, L>(
     function: F,
     error_handle_function: E,

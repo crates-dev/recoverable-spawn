@@ -5,7 +5,6 @@ use std::thread::{JoinHandle, spawn};
 ///
 /// - `func`: A function implementing the `RecoverableFunction` trait.
 /// - Returns: A `SpawnResult` indicating the success or failure of the function execution.
-#[inline]
 pub fn run_function<F: RecoverableFunction>(func: F) -> SpawnResult {
     std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
         func();
@@ -17,7 +16,6 @@ pub fn run_function<F: RecoverableFunction>(func: F) -> SpawnResult {
 /// - `func`: A function implementing the `ErrorHandlerFunction` trait.
 /// - `error`: A string slice representing the error message.
 /// - Returns: A `SpawnResult` indicating the success or failure of the error-handling function execution.
-#[inline]
 pub fn run_error_handle_function<E: ErrorHandlerFunction>(func: E, error: &str) -> SpawnResult {
     std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
         func(error);
@@ -28,7 +26,6 @@ pub fn run_error_handle_function<E: ErrorHandlerFunction>(func: E, error: &str) 
 ///
 /// - `err`: The captured error value, of type `BoxAnySend`.
 /// - Returns: A string representation of the error value.
-#[inline]
 pub fn spawn_error_to_string(err: BoxAnySend) -> String {
     match err.downcast_ref::<&str>() {
         Some(str_slice) => str_slice.to_string(),
@@ -57,7 +54,6 @@ pub fn spawn_error_to_string(err: BoxAnySend) -> String {
 /// # Panics
 /// - This function itself will not panic, but the function `function` could panic during execution.
 ///   The panic will be caught, preventing the program from crashing.
-#[inline]
 pub fn recoverable_spawn<F>(function: F) -> JoinHandle<()>
 where
     F: RecoverableFunction,
@@ -72,7 +68,6 @@ where
 /// - `function`: The primary function to execute, implementing the `RecoverableFunction` trait.
 /// - `error_handle_function`: A function to handle errors, implementing the `ErrorHandlerFunction` trait.
 /// - Returns: A `JoinHandle<()>` that can be used to manage the spawned thread.
-#[inline]
 pub fn recoverable_spawn_catch<F, E>(function: F, error_handle_function: E) -> JoinHandle<()>
 where
     F: RecoverableFunction,
@@ -87,7 +82,6 @@ where
     })
 }
 
-#[inline]
 pub fn recoverable_spawn_catch_finally<F, E, L>(
     function: F,
     error_handle_function: E,
