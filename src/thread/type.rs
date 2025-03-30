@@ -2,12 +2,6 @@ use crate::*;
 use std::{any::Any, sync::Arc};
 use tokio::task::JoinError;
 
-/// Type alias for a boxed dynamic type that implements `Any` and `Send`.
-///
-/// - Represents a boxed value that can be used for dynamic type checking (`Any`)
-///   and safely transferred across threads (`Send`).
-pub type BoxAnySend = Box<dyn Any + Send>;
-
 /// Type alias for the result type returned by spawnable functions.
 ///
 /// - `Ok(())`: Indicates successful execution of the function.
@@ -17,8 +11,8 @@ pub type AsyncSpawnResult = Result<(), JoinError>;
 /// Type alias for the result type returned by spawnable functions.
 ///
 /// - `Ok(())`: Indicates successful execution of the function.
-/// - `Err(BoxAnySend)`: Contains a boxed error value in case of a panic or failure.
-pub type SpawnResult = Result<(), BoxAnySend>;
+/// - `Err(Box<dyn Any + Send>)`: Contains a boxed error value in case of a panic or failure.
+pub type SpawnResult = Result<(), Box<dyn Any + Send>>;
 
 /// Alias for an `Arc`-wrapped recoverable function.
 ///

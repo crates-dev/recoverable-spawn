@@ -1,5 +1,8 @@
 use super::{r#trait::*, r#type::*};
-use std::thread::{JoinHandle, spawn};
+use std::{
+    any::Any,
+    thread::{JoinHandle, spawn},
+};
 
 /// Executes a recoverable function within a panic-safe context.
 ///
@@ -24,9 +27,9 @@ pub fn run_error_handle_function<E: ErrorHandlerFunction>(func: E, error: &str) 
 
 /// Converts a panic-captured error value into a string.
 ///
-/// - `err`: The captured error value, of type `BoxAnySend`.
+/// - `err`: The captured error value, of type `Box<dyn Any + Send>`.
 /// - Returns: A string representation of the error value.
-pub fn spawn_error_to_string(err: BoxAnySend) -> String {
+pub fn spawn_error_to_string(err: Box<dyn Any + Send>) -> String {
     match err.downcast_ref::<&str>() {
         Some(str_slice) => str_slice.to_string(),
         None => match err.downcast_ref::<String>() {
