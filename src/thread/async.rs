@@ -1,26 +1,16 @@
 use super::{r#trait::*, r#type::*};
-use once_cell::sync::Lazy;
-use runtime::Runtime;
 use std::sync::Arc;
 use std::thread::{JoinHandle, spawn};
 use task::JoinError;
+use tokio::runtime::Handle;
 use tokio::*;
-
-static GLOBAL_RUNTIME: Lazy<Runtime> = Lazy::new(|| {
-    loop {
-        match Runtime::new() {
-            Ok(runtime) => return runtime,
-            Err(_) => {}
-        }
-    }
-});
 
 /// Executes a recoverable function within a panic-safe context.
 ///
 /// - `func`: A function implementing the `AsyncRecoverableFunction` trait.
 /// - Returns: A `AsyncSpawnResult` indicating the success or failure of the function execution.
 pub fn run_function<F: AsyncRecoverableFunction>(func: F) -> AsyncSpawnResult {
-    let res: Result<(), JoinError> = GLOBAL_RUNTIME.block_on(async move {
+    let res: Result<(), JoinError> = Handle::current().block_on(async move {
         let func = async move {
             func.call().await;
         };
@@ -38,7 +28,7 @@ pub fn run_error_handle_function<E: AsyncErrorHandlerFunction>(
     func: E,
     error: Arc<String>,
 ) -> AsyncSpawnResult {
-    let res: Result<(), JoinError> = GLOBAL_RUNTIME.block_on(async move {
+    let res: Result<(), JoinError> = Handle::current().block_on(async move {
         let func = async move {
             func.call(error.clone()).await;
         };
