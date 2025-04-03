@@ -31,11 +31,10 @@ cargo add recoverable-spawn
 ```rust
 use recoverable_spawn::*;
 let msg: &str = "test";
-let handle: JoinHandle<()> = recoverable_spawn(move || {
+let res: SyncSpawnResult = recoverable_spawn(move || {
     panic!("{}", msg);
 });
-let _ = handle.join();
-let handle: JoinHandle<()> = recoverable_spawn_with_error_handle(
+let res: SyncSpawnResult = recoverable_spawn_with_error_handle(
     move || {
         panic!("{}", msg);
     },
@@ -43,7 +42,6 @@ let handle: JoinHandle<()> = recoverable_spawn_with_error_handle(
         println!("handle error => {}", err);
     },
 );
-let _ = handle.join();
 ```
 
 ### recoverable_spawn_with_error_handle
@@ -51,7 +49,7 @@ let _ = handle.join();
 ```rust
 use recoverable_spawn::*;
 let msg: &str = "test";
-let handle: JoinHandle<()> = recoverable_spawn_with_error_handle(
+let res: SyncSpawnResult = recoverable_spawn_with_error_handle(
     move || {
         panic!("{}", msg);
     },
@@ -59,7 +57,6 @@ let handle: JoinHandle<()> = recoverable_spawn_with_error_handle(
         println!("handle error => {}", err);
     },
 );
-let _ = handle.join();
 ```
 
 ### async_recoverable_spawn
@@ -67,10 +64,9 @@ let _ = handle.join();
 ```rust
 use recoverable_spawn::*;
 let msg: &str = "test";
-let handle: JoinHandle<()> = async_recoverable_spawn(move || async move {
+let res: AsyncSpawnResult = async_recoverable_spawn(move || async move {
     panic!("{}", msg);
 });
-let _ = handle.join();
 ```
 
 ### async_recoverable_spawn_catch
@@ -78,7 +74,7 @@ let _ = handle.join();
 ```rust
 use recoverable_spawn::*;
 let msg: &str = "test";
-let handle: JoinHandle<()> = async_recoverable_spawn_catch(
+let res: AsyncSpawnResult = async_recoverable_spawn_catch(
     move || async move {
         panic!("{}", msg);
     },
@@ -86,7 +82,6 @@ let handle: JoinHandle<()> = async_recoverable_spawn_catch(
         println!("handle error => {}", err);
     },
 );
-let _ = handle.join();
 ```
 
 ### async_recoverable_spawn_catch_finally
@@ -94,7 +89,7 @@ let _ = handle.join();
 ```rust
 use recoverable_spawn::*;
 let msg: &str = "test";
-let handle: JoinHandle<()> = async_recoverable_spawn_catch_finally(
+let res: AsyncSpawnResult = async_recoverable_spawn_catch_finally(
     move || async move {
         panic!("{}", msg);
     },
@@ -106,7 +101,6 @@ let handle: JoinHandle<()> = async_recoverable_spawn_catch_finally(
         println!("finally");
     },
 );
-let _ = handle.join();
 ```
 
 ## License

@@ -2,6 +2,9 @@ use crate::*;
 use std::{any::Any, sync::Arc};
 use tokio::task::JoinError;
 
+/// SpawnError
+pub type SpawnError = Box<dyn Any + Send>;
+
 /// Type alias for the result type returned by spawnable functions.
 ///
 /// - `Ok(())`: Indicates successful execution of the function.
@@ -11,8 +14,8 @@ pub type AsyncSpawnResult = Result<(), JoinError>;
 /// Type alias for the result type returned by spawnable functions.
 ///
 /// - `Ok(())`: Indicates successful execution of the function.
-/// - `Err(Box<dyn Any + Send>)`: Contains a boxed error value in case of a panic or failure.
-pub type SpawnResult = Result<(), Box<dyn Any + Send>>;
+/// - `Err(SpawnError)`: Contains a boxed error value in case of a panic or failure.
+pub type SyncSpawnResult = Result<(), SpawnError>;
 
 /// Alias for an `Arc`-wrapped recoverable function.
 ///
