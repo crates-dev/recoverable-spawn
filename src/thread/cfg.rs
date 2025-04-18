@@ -1,6 +1,6 @@
 #[tokio::test]
 async fn test_async_recoverable_spawn() {
-    use crate::{r#async::*, *};
+    use crate::r#async::*;
     let msg: &str = "test";
     let res: AsyncSpawnResult = async_recoverable_spawn(move || async move {
         panic!("{}", msg);
@@ -11,7 +11,7 @@ async fn test_async_recoverable_spawn() {
 
 #[tokio::test]
 async fn test_async_recoverable_spawn_catch() {
-    use crate::{r#async::*, *};
+    use crate::r#async::*;
     let msg: &str = "test";
     let res: AsyncSpawnResult = async_recoverable_spawn_catch(
         move || async move {
@@ -27,7 +27,7 @@ async fn test_async_recoverable_spawn_catch() {
 
 #[tokio::test]
 async fn test_async_recoverable_spawn_catch_finally() {
-    use crate::{r#async::*, *};
+    use crate::r#async::*;
     let msg: &str = "test";
     let res: AsyncSpawnResult = async_recoverable_spawn_catch_finally(
         move || async move {
@@ -50,7 +50,7 @@ async fn test_async_recoverable_spawn_catch_finally() {
 
 #[test]
 fn test_recoverable_spawn() {
-    use crate::{r#sync::*, *};
+    use crate::r#sync::*;
     let msg: &str = "test";
     let res: SyncSpawnResult = recoverable_spawn(move || {
         panic!("{}", msg);
@@ -60,7 +60,7 @@ fn test_recoverable_spawn() {
 
 #[test]
 fn test_recoverable_spawn_catch() {
-    use crate::{r#sync::*, *};
+    use crate::r#sync::*;
     let msg: &str = "test";
     let res: SyncSpawnResult = recoverable_spawn_catch(
         move || {
@@ -75,7 +75,7 @@ fn test_recoverable_spawn_catch() {
 
 #[test]
 fn test_recoverable_spawn_catch_finally() {
-    use crate::{r#sync::*, *};
+    use crate::r#sync::*;
     let msg: &str = "test";
     let res: SyncSpawnResult = recoverable_spawn_catch_finally(
         move || {
