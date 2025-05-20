@@ -1,12 +1,12 @@
 [package]
 name = "recoverable-spawn"
-version = "3.7.2"
+version = "3.7.3"
 edition = "2024"
-authors = ["ltpp-universe <root@ltpp.vip>"] 
+authors = ["eastspire <root@ltpp.vip>"] 
 license = "MIT"
 description = """A thread that supports automatic recovery from panics, allowing threads to restart after a panic. Useful for resilient and fault-tolerant concurrency in network and web programming."""
 keywords = ["time", "hyperlane", "day", "format", "lang"]
-repository = "https://github.com/ltpp-universe/recoverable-spawn.git"
+repository = "https://github.com/eastspire/recoverable-spawn.git"
 categories = ["network-programming", "web-programming"]
 exclude = [
     "target",
@@ -17,7 +17,7 @@ exclude = [
 
 [dependencies]
 once_cell = "1.21.3"
-tokio = { version = "1.44.2", features = ["full"] }
+tokio = { version = "1.45.0", features = ["full"] }
 
 [profile.dev]
 incremental = false
