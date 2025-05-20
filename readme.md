@@ -5,7 +5,7 @@
 [![](https://img.shields.io/crates/v/recoverable-spawn.svg)](https://crates.io/crates/recoverable-spawn)
 [![](https://img.shields.io/crates/d/recoverable-spawn.svg)](https://img.shields.io/crates/d/recoverable-spawn.svg)
 [![](https://docs.rs/recoverable-spawn/badge.svg)](https://docs.rs/recoverable-spawn)
-[![](https://github.com/ltpp-universe/recoverable-spawn/workflows/Rust/badge.svg)](https://github.com/ltpp-universe/recoverable-spawn/actions?query=workflow:Rust)
+[![](https://github.com/eastspire/recoverable-spawn/workflows/Rust/badge.svg)](https://github.com/eastspire/recoverable-spawn/actions?query=workflow:Rust)
 [![](https://img.shields.io/crates/l/recoverable-spawn.svg)](./LICENSE)
 
 </center>
@@ -113,4 +113,4 @@ Contributions are welcome! Please open an issue or submit a pull request.
 
 ## Contact
 
-For any inquiries, please reach out to the author at [ltpp-universe <root@ltpp.vip>](mailto:root@ltpp.vip).
+For any inquiries, please reach out to the author at [eastspire <root@ltpp.vip>](mailto:root@ltpp.vip).
