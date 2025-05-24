@@ -30,6 +30,7 @@ cargo add recoverable-spawn
 
 ```rust
 use recoverable_spawn::*;
+
 let msg: &str = "test";
 let res: SyncSpawnResult = recoverable_spawn(move || {
     panic!("{}", msg);
@@ -48,6 +49,7 @@ let res: SyncSpawnResult = recoverable_spawn_with_error_handle(
 
 ```rust
 use recoverable_spawn::*;
+
 let msg: &str = "test";
 let res: SyncSpawnResult = recoverable_spawn_with_error_handle(
     move || {
@@ -63,6 +65,7 @@ let res: SyncSpawnResult = recoverable_spawn_with_error_handle(
 
 ```rust
 use recoverable_spawn::*;
+
 let msg: &str = "test";
 let res: AsyncSpawnResult = async_recoverable_spawn(move || async move {
     panic!("{}", msg);
@@ -73,6 +76,7 @@ let res: AsyncSpawnResult = async_recoverable_spawn(move || async move {
 
 ```rust
 use recoverable_spawn::*;
+
 let msg: &str = "test";
 let res: AsyncSpawnResult = async_recoverable_spawn_catch(
     move || async move {
@@ -88,6 +92,7 @@ let res: AsyncSpawnResult = async_recoverable_spawn_catch(
 
 ```rust
 use recoverable_spawn::*;
+
 let msg: &str = "test";
 let res: AsyncSpawnResult = async_recoverable_spawn_catch_finally(
     move || async move {
