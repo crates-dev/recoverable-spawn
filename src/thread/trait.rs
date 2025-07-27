@@ -23,8 +23,13 @@ impl<T> FunctionMutTrait for T where T: FnMut() + Send + Sync + 'static {}
 
 /// Trait alias for asynchronous functions that can be executed in a recoverable context.
 ///
-/// - Functions implementing this trait must return a `Future` and satisfy
-///   `FnOnce() -> Future + Send + Sync + 'static`.
+/// # Arguments
+///
+/// - `FnOnce() -> Future` - Function that returns a Future.
+///
+/// # Returns
+///
+/// - `Future` - The asynchronous computation result.
 pub trait AsyncRecoverableFunction: Send + Sync + 'static {
     type Output: Send;
     type Future: Future<Output = Self::Output> + Send;
@@ -49,8 +54,13 @@ where
 
 /// Trait alias for asynchronous error-handling functions used in a recoverable context.
 ///
-/// - Functions implementing this trait must accept a `Arc<String>` as an error message,
-///   return a `Future`, and satisfy `FnOnce(Arc<String>) -> Future + Send + Sync + 'static`.
+/// # Arguments
+///
+/// - `Arc<String>` - The error message to handle.
+///
+/// # Returns
+///
+/// - `Future` - The asynchronous error handling result.
 pub trait AsyncErrorHandlerFunction: Send + Sync + 'static {
     type Future: Future<Output = ()> + Send;
 
@@ -81,8 +91,9 @@ impl<T> RecoverableFunction for T where T: FnOnce() + Send + Sync + 'static {}
 
 /// Trait alias for error-handling functions used in a recoverable context.
 ///
-/// - Functions implementing this trait must accept a `&str` as an error message
-///   and satisfy `FnOnce(&str) + Send + Sync + 'static`.
+/// # Arguments
+///
+/// - `&str` - The error message to handle.
 pub trait ErrorHandlerFunction: FnOnce(&str) + Send + Sync + 'static {}
 
 impl<T> ErrorHandlerFunction for T where T: FnOnce(&str) + Send + Sync + 'static {}

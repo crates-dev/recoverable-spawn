@@ -2,30 +2,35 @@ use crate::*;
 use std::{any::Any, sync::Arc};
 use tokio::task::JoinError;
 
-/// SpawnError
+/// Error type for spawn operations.
 pub type SpawnError = Box<dyn Any + Send>;
 
-/// Type alias for the result type returned by spawnable functions.
+/// Result type for asynchronous spawn operations.
 ///
-/// - `Ok(())`: Indicates successful execution of the function.
-/// - `Err(JoinError)`: Contains a error value in case of a panic or failure.
+/// # Returns
+///
+/// - `Result<(), JoinError>` - The spawn operation result.
 pub type AsyncSpawnResult = Result<(), JoinError>;
 
-/// Type alias for the result type returned by spawnable functions.
+/// Result type for synchronous spawn operations.
 ///
-/// - `Ok(())`: Indicates successful execution of the function.
-/// - `Err(SpawnError)`: Contains a boxed error value in case of a panic or failure.
+/// # Returns
+///
+/// - `Result<(), SpawnError>` - The spawn operation result.
 pub type SyncSpawnResult = Result<(), SpawnError>;
 
-/// Alias for an `Arc`-wrapped recoverable function.
+/// Arc-wrapped asynchronous recoverable function.
 ///
-/// - This type represents an `Arc`-wrapped version of any function implementing the `AsyncRecoverableFunction` trait.
-/// - Enables shared ownership and thread-safe usage of recoverable functions in concurrent environments.
+/// # Type Parameters
+///
+/// - `O` - The output type.
+/// - `F` - The future type.
 pub type ArcAsyncRecoverableFunction<O, F> =
     Arc<dyn AsyncRecoverableFunction<Output = O, Future = F>>;
 
-/// Alias for an `Arc`-wrapped error handler function.
+/// Arc-wrapped asynchronous error handler function.
 ///
-/// - This type represents an `Arc`-wrapped version of any function implementing the `AsyncErrorHandlerFunction` trait.
-/// - Allows shared ownership and thread-safe handling of errors with custom logic across multiple threads.
+/// # Type Parameters
+///
+/// - `O` - The future type.
 pub type ArcAsyncErrorHandlerFunction<O> = Arc<dyn AsyncErrorHandlerFunction<Future = O>>;

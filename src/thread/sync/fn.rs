@@ -1,10 +1,14 @@
-use super::*;
 use crate::*;
 
 /// Executes a recoverable function within a panic-safe context.
 ///
-/// - `func`: A function implementing the `RecoverableFunction` trait.
-/// - Returns: A `SyncSpawnResult` indicating the success or failure of the function execution.
+/// # Arguments
+///
+/// - `F` - Function implementing RecoverableFunction.
+///
+/// # Returns
+///
+/// - `SyncSpawnResult` - The spawn operation result.
 pub fn run_function<F: RecoverableFunction>(func: F) -> SyncSpawnResult {
     set_hook(Box::new(move |_| {}));
     std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
@@ -12,11 +16,16 @@ pub fn run_function<F: RecoverableFunction>(func: F) -> SyncSpawnResult {
     }))
 }
 
-/// Executes an error-handling function with a given error message within a panic-safe context.
+/// Executes an error-handling function within a panic-safe context.
 ///
-/// - `func`: A function implementing the `ErrorHandlerFunction` trait.
-/// - `error`: A string slice representing the error message.
-/// - Returns: A `SyncSpawnResult` indicating the success or failure of the error-handling function execution.
+/// # Arguments
+///
+/// - `E` - Function implementing ErrorHandlerFunction.
+/// - `&str` - The error message.
+///
+/// # Returns
+///
+/// - `SyncSpawnResult` - The spawn operation result.
 pub fn run_error_handle_function<E: ErrorHandlerFunction>(func: E, error: &str) -> SyncSpawnResult {
     set_hook(Box::new(move |_| {}));
     std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
@@ -26,8 +35,13 @@ pub fn run_error_handle_function<E: ErrorHandlerFunction>(func: E, error: &str) 
 
 /// Converts a panic-captured error value into a string.
 ///
-/// - `err`: The captured error value, of type `SpawnError`.
-/// - Returns: A string representation of the error value.
+/// # Arguments
+///
+/// - `&SpawnError` - The captured error value.
+///
+/// # Returns
+///
+/// - `String` - The error string representation.
 pub fn spawn_error_to_string(err: &SpawnError) -> String {
     match err.downcast_ref::<&str>() {
         Some(str_slice) => str_slice.to_string(),
@@ -38,23 +52,15 @@ pub fn spawn_error_to_string(err: &SpawnError) -> String {
     }
 }
 
-/// Spawns a new thread to run the provided function `function` in a recoverable manner.
-/// If the function `function` panics during execution, the panic will be caught, and the thread
-/// will terminate without crashing the entire program.
+/// Spawns a recoverable function.
 ///
-/// # Parameters
-/// - `function`: A function of type `function` to be executed in the spawned thread. It must implement `FnOnce()`, `Send`, `Sync`, and `'static` traits.
-///     - `FnOnce()`: The function is callable with no arguments and no return value.
-///     - `Send`: The function can be safely transferred across thread boundaries.
-///     - `Sync`: The function can be shared across threads safely.
-///     - `'static`: The function does not contain references to non-static data (i.e., data that lives beyond the function's scope).
+/// # Arguments
+///
+/// - `F` - Function implementing RecoverableFunction.
 ///
 /// # Returns
-/// - A `SyncSpawnResult`
 ///
-/// # Panics
-/// - This function itself will not panic, but the function `function` could panic during execution.
-///   The panic will be caught, preventing the program from crashing.
+/// - `SyncSpawnResult` - The spawn operation result.
 pub fn recoverable_spawn<F>(function: F) -> SyncSpawnResult
 where
     F: RecoverableFunction,
@@ -62,11 +68,16 @@ where
     run_function(function)
 }
 
-/// Spawns a recoverable function with an error-handling function in a new thread.
+/// Spawns a recoverable function with error handling.
 ///
-/// - `function`: The primary function to execute, implementing the `RecoverableFunction` trait.
-/// - `error_handle_function`: A function to handle errors, implementing the `ErrorHandlerFunction` trait.
-/// - Returns: A `SyncSpawnResult`
+/// # Arguments
+///
+/// - `F` - Function implementing RecoverableFunction.
+/// - `E` - Function implementing ErrorHandlerFunction.
+///
+/// # Returns
+///
+/// - `SyncSpawnResult` - The spawn operation result.
 pub fn recoverable_spawn_catch<F, E>(function: F, error_handle_function: E) -> SyncSpawnResult
 where
     F: RecoverableFunction,
@@ -80,6 +91,17 @@ where
     return run_result;
 }
 
+/// Spawns a recoverable function with error handling and finalization.
+///
+/// # Arguments
+///
+/// - `F` - Function implementing RecoverableFunction.
+/// - `E` - Function implementing ErrorHandlerFunction.
+/// - `L` - Function implementing RecoverableFunction.
+///
+/// # Returns
+///
+/// - `SyncSpawnResult` - The spawn operation result.
 pub fn recoverable_spawn_catch_finally<F, E, L>(
     function: F,
     error_handle_function: E,
