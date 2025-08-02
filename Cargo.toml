@@ -1,13 +1,13 @@
 [package]
 name = "recoverable-spawn"
-version = "3.9.2"
+version = "3.9.3"
 readme = "README.md"
 edition = "2024"
 authors = ["root@ltpp.vip"]
 license = "MIT"
 description = """A thread that supports automatic recovery from panics, allowing threads to restart after a panic. Useful for resilient and fault-tolerant concurrency in network and web programming."""
 keywords = ["time", "hyperlane", "day", "format", "lang"]
-repository = "https://github.com/eastspire/recoverable-spawn.git"
+repository = "https://github.com/crates-dev/recoverable-spawn.git"
 categories = ["network-programming", "web-programming"]
 exclude = [
     "target",
