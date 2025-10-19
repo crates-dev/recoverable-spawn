@@ -15,7 +15,7 @@ pub async fn async_run_function<F: AsyncRecoverableFunction>(func: F) -> AsyncSp
     let func = async move {
         func.call().await;
     };
-    return tokio::spawn(func).await;
+    tokio::spawn(func).await
 }
 
 /// Executes an error-handling function within a panic-safe context.
@@ -36,7 +36,7 @@ pub async fn async_run_error_handle_function<E: AsyncErrorHandlerFunction>(
     let func = async move {
         func.call(error.clone()).await;
     };
-    return tokio::spawn(func).await;
+    tokio::spawn(func).await
 }
 
 /// Converts a panic-captured error value into a string.
@@ -92,7 +92,7 @@ where
         let _: AsyncSpawnResult =
             async_run_error_handle_function(error_handle_function, Arc::new(err_string)).await;
     }
-    return run_result;
+    run_result
 }
 
 /// Spawns a recoverable function with error handling and finalization.
@@ -123,5 +123,5 @@ where
             async_run_error_handle_function(error_handle_function, Arc::new(err_string)).await;
     }
     let _: AsyncSpawnResult = async_run_function(finally).await;
-    return run_result;
+    run_result
 }

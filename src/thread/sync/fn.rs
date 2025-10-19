@@ -88,7 +88,7 @@ where
         let err_string: String = spawn_error_to_string(err);
         let _: SyncSpawnResult = run_error_handle_function(error_handle_function, &err_string);
     }
-    return run_result;
+    run_result
 }
 
 /// Spawns a recoverable function with error handling and finalization.
@@ -118,5 +118,5 @@ where
         let _: SyncSpawnResult = run_error_handle_function(error_handle_function, &err_string);
     }
     let _: SyncSpawnResult = run_function(finally);
-    return run_result;
+    run_result
 }
