@@ -47,7 +47,7 @@ pub fn spawn_error_to_string(err: &SpawnError) -> String {
         Some(str_slice) => str_slice.to_string(),
         None => match err.downcast_ref::<String>() {
             Some(string) => string.to_owned(),
-            None => format!("{:?}", err),
+            None => format!("{err:?}"),
         },
     }
 }
