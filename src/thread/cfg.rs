@@ -6,7 +6,7 @@ async fn test_async_recoverable_spawn() {
         panic!("{}", msg);
     })
     .await;
-    println!("test_async_recoverable_spawn handle res {:?}", res);
+    println!("test_async_recoverable_spawn handle res {res:?}");
 }
 
 #[tokio::test]
@@ -18,11 +18,11 @@ async fn test_async_recoverable_spawn_catch() {
             panic!("{}", msg);
         },
         move |err| async move {
-            println!("async handle error => {}", err);
+            println!("async handle error => {err}");
         },
     )
     .await;
-    println!("test_async_recoverable_spawn_catch handle res {:?}", res);
+    println!("test_async_recoverable_spawn_catch handle res {res:?}");
 }
 
 #[tokio::test]
@@ -34,7 +34,7 @@ async fn test_async_recoverable_spawn_catch_finally() {
             panic!("{}", msg);
         },
         move |err| async move {
-            println!("async handle error => {}", err);
+            println!("async handle error => {err}");
             panic!("{}", err);
         },
         move || async move {
@@ -43,8 +43,7 @@ async fn test_async_recoverable_spawn_catch_finally() {
     )
     .await;
     println!(
-        "test_async_recoverable_spawn_catch_finally handle res {:?}",
-        res
+        "test_async_recoverable_spawn_catch_finally handle res {res:?}"
     );
 }
 
@@ -55,7 +54,7 @@ fn test_recoverable_spawn() {
     let res: SyncSpawnResult = recoverable_spawn(move || {
         panic!("{}", msg);
     });
-    println!("test_recoverable_spawn handle res {:?}", res);
+    println!("test_recoverable_spawn handle res {res:?}");
 }
 
 #[test]
@@ -67,10 +66,10 @@ fn test_recoverable_spawn_catch() {
             panic!("{}", msg);
         },
         |err| {
-            println!("handle error => {}", err);
+            println!("handle error => {err}");
         },
     );
-    println!("test_recoverable_spawn_catch handle res {:?}", res);
+    println!("test_recoverable_spawn_catch handle res {res:?}");
 }
 
 #[test]
@@ -82,12 +81,12 @@ fn test_recoverable_spawn_catch_finally() {
             panic!("{}", msg);
         },
         |err| {
-            println!("handle error => {}", err);
+            println!("handle error => {err}");
             panic!("{}", err);
         },
         || {
             println!("finally");
         },
     );
-    println!("test_recoverable_spawn_catch_finally handle res {:?}", res);
+    println!("test_recoverable_spawn_catch_finally handle res {res:?}");
 }
