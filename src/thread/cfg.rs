@@ -42,9 +42,7 @@ async fn test_async_recoverable_spawn_catch_finally() {
         },
     )
     .await;
-    println!(
-        "test_async_recoverable_spawn_catch_finally handle res {res:?}"
-    );
+    println!("test_async_recoverable_spawn_catch_finally handle res {res:?}");
 }
 
 #[test]
