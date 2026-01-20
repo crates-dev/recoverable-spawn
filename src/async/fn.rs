@@ -1,5 +1,4 @@
 use crate::*;
-use tokio::task::JoinError;
 
 /// Executes a recoverable function within a panic-safe context.
 ///
