@@ -4,12 +4,12 @@
 //! allowing threads to restart after a panic. Useful for resilient
 //! and fault-tolerant concurrency in network and web programming.
 
-pub(crate) mod r#async;
-pub(crate) mod common;
-pub(crate) mod sync;
-
-pub(crate) use std::{any::Any, panic::set_hook, sync::Arc};
-
-pub(crate) use tokio::task::JoinError;
+mod r#async;
+mod common;
+mod sync;
 
 pub use {r#async::*, common::*, sync::*};
+
+use std::{any::Any, panic::set_hook, sync::Arc};
+
+use tokio::task::JoinError;
