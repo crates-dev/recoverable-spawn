@@ -1,6 +1,6 @@
 [package]
 name = "recoverable-spawn"
-version = "3.9.14"
+version = "3.9.15"
 readme = "README.md"
 edition = "2024"
 authors = ["root@ltpp.vip"]
