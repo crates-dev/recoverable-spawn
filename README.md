@@ -12,7 +12,7 @@
 
 [Official Documentation](https://docs.ltpp.vip/recoverable-spawn/)
 
-[Api Docs](https://docs.rs/recoverable-spawn/latest/recoverable_spawn/)
+[Api Docs](https://docs.rs/recoverable-spawn/latest/)
 
 > A thread that supports automatic recovery from panics, allowing threads to restart after a panic. Useful for resilient and fault-tolerant concurrency in network and web programming.
 
